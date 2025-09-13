@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 AI Development Studio</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4ecdc4;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+        
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .progress-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .progress-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .progress-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .progress-percentage {
+            font-size: 1.2rem;
+            color: #4ecdc4;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #45b7d1);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .phase-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .phase-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .phase-item.active {
+            background: rgba(78, 205, 196, 0.2);
+            border: 1px solid #4ecdc4;
+        }
+        
+        .phase-item.completed {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+        }
+        
+        .phase-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .phase-content {
+            flex: 1;
+        }
+        
+        .phase-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .phase-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .phase-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pending { background: #6b7280; }
+        .status-active { background: #4ecdc4; animation: pulse 2s infinite; }
+        .status-completed { background: #22c55e; }
+        .status-error { background: #ef4444; }
+        
+        .projects-grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .project-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .project-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4ecdc4;
+        }
+        
+        .project-status {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .project-info {
+            margin-bottom: 15px;
+        }
+        
+        .project-url {
+            color: #4ecdc4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .project-url:hover {
+            text-decoration: underline;
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn.primary {
+            background: #4ecdc4;
+            color: white;
+        }
+        
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .live-log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-left: 3px solid #4ecdc4;
+            padding-left: 15px;
+            animation: slideInLeft 0.3s ease-out;
+        }
+        
+        .log-entry.error {
+            border-left-color: #ef4444;
+            color: #fca5a5;
+        }
+        
+        .log-entry.success {
+            border-left-color: #22c55e;
+            color: #86efac;
+        }
+        
+        .log-entry.warning {
+            border-left-color: #f59e0b;
+            color: #fde68a;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 40%;
+            left: 80%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🚀 AI Development Studio</h1>
+            <p>Create, Deploy, and Scale Applications with AI-Powered Multi-Agent System</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProjects">0</div>
+                <div class="stat-label">Projects Created</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeProjects">0</div>
+                <div class="stat-label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="deployedProjects">0</div>
+                <div class="stat-label">Deployed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="successRate">100%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="card">
+                <h2>🎯 Create New Project</h2>
+                <form id="projectForm">
+                    <div class="form-group">
+                        <label for="command">Project Description</label>
+                        <textarea id="command" placeholder="e.g., Build a modern task management app with drag-and-drop, real-time collaboration, and mobile support" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectName">Project Name</label>
+                        <input type="text" id="projectName" placeholder="my-awesome-app">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectType">Project Type</label>
+                        <select id="projectType">
+                            <option value="web-app">Web Application</option>
+                            <option value="api">REST API</option>
+                            <option value="fullstack">Full-Stack App</option>
+                            <option value="mobile">Mobile App</option>
+                            <option value="desktop">Desktop App</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="techStack">Preferred Tech Stack</label>
+                        <select id="techStack">
+                            <option value="react-node">React + Node.js</option>
+                            <option value="vue-express">Vue.js + Express</option>
+                            <option value="angular-nest">Angular + NestJS</option>
+                            <option value="nextjs">Next.js Full-Stack</option>
+                            <option value="python-fastapi">Python + FastAPI</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn" id="createBtn">
+                        <span class="btn-text">🚀 Create & Deploy Project</span>
+                    </button>
+                </form>
+                
+                <div class="progress-section" id="progressSection">
+                    <div class="progress-header">
+                        <div class="progress-title">Development Progress</div>
+                        <div class="progress-percentage" id="progressPercentage">0%</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="phase-list" id="phaseList">
+                        <div class="phase-item" id="phase-planning">
+                            <div class="phase-icon">🧠</div>
+                            <div class="phase-content">
+                                <div class="phase-name">AI Planning</div>
+                                <div class="phase-description">Analyzing requirements and creating detailed plan</div>
+                            </div>
+                            <div class="phase-status status-pending">Pending</div>
+                        </div>
+                        <div class="phase-item" id="phase-coding">
+                            <div class="phase-icon">💻</div>
+                            <div class="phase-content">
+                                <div class="phase-name">Code Generation</div>
+                                <div class="phase-description">Creating project files and structure</div>
+                            </div>
+                            <div class="phase-status status-pending">Pending</div>
+                        </div>
+                        <div class="phase-item" id="phase-testing">
+                            <div class="phase-icon">🧪</div>
+                            <div class="phase-content">
+                                <div class="phase-name">Testing & QA</div>
+                                <div class="phase-description">Running automated tests and quality checks</div>
+                            </div>
+                            <div class="phase-status status-pending">Pending</div>
+                        </div>
+                        <div class="phase-item" id="phase-deployment">
+                            <div class="phase-icon">🚀</div>
+                            <div class="phase-content">
+                                <div class="phase-name">Deployment</div>
+                                <div class="phase-description">Deploying to GitHub Pages and live servers</div>
+                            </div>
+                            <div class="phase-status status-pending">Pending</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="live-log" id="liveLog" style="display: none;">
+                    <div class="log-entry">Ready to start development...</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📊 Active Projects</h2>
+                <button class="btn" onclick="loadProjects()" style="margin-bottom: 20px;">🔄 Refresh Projects</button>
+                <div class="projects-grid" id="projectsGrid">
+                    <div style="text-align: center; opacity: 0.7; padding: 40px;">
+                        No active projects yet. Create your first project!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentProject = null;
+        let progressInterval = null;
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjects();
+            updateStats();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                loadProjects();
+                updateStats();
+            }, 30000);
+        });
+        
+        // Project form submission
+        document.getElementById('projectForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const command = document.getElementById('command').value.trim();
+            const projectName = document.getElementById('projectName').value.trim();
+            const projectType = document.getElementById('projectType').value;
+            const techStack = document.getElementById('techStack').value;
+            
+            if (!command) {
+                alert('Please enter a project description');
+                return;
+            }
+            
+            if (!projectName) {
+                alert('Please enter a project name');
+                return;
+            }
+            
+            const createBtn = document.getElementById('createBtn');
+            const progressSection = document.getElementById('progressSection');
+            const liveLog = document.getElementById('liveLog');
+            
+            // Start the development process
+            createBtn.disabled = true;
+            createBtn.classList.add('loading');
+            createBtn.querySelector('.btn-text').textContent = 'Creating Project...';
+            progressSection.classList.add('active');
+            liveLog.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/start-advanced-development', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        command: command,
+                        project_name: projectName,
+                        project_type: projectType,
+                        tech_stack: techStack
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    currentProject = data.data;
+                    startProgressTracking(data.data);
+                    addLogEntry('Project created successfully!', 'success');
+                } else {
+                    addLogEntry('Error: ' + data.message, 'error');
+                }
+            } catch (error) {
+                addLogEntry('Error: ' + error.message, 'error');
+            } finally {
+                createBtn.disabled = false;
+                createBtn.classList.remove('loading');
+                createBtn.querySelector('.btn-text').textContent = '🚀 Create & Deploy Project';
+            }
+        });
+        
+        function startProgressTracking(projectData) {
+            const phases = ['planning', 'coding', 'testing', 'deployment'];
+            let currentPhase = 0;
+            let progress = 0;
+            
+            progressInterval = setInterval(() => {
+                if (currentPhase < phases.length) {
+                    // Activate current phase
+                    const phaseElement = document.getElementById(`phase-${phases[currentPhase]}`);
+                    phaseElement.classList.add('active');
+                    phaseElement.querySelector('.phase-status').textContent = 'In Progress';
+                    phaseElement.querySelector('.phase-status').className = 'phase-status status-active';
+                    
+                    // Update progress
+                    progress = ((currentPhase + 1) / phases.length) * 100;
+                    document.getElementById('progressPercentage').textContent = Math.round(progress) + '%';
+                    document.getElementById('progressFill').style.width = progress + '%';
+                    
+                    // Add log entry
+                    addLogEntry(`Phase ${currentPhase + 1}: ${phaseElement.querySelector('.phase-name').textContent}`, 'success');
+                    
+                    currentPhase++;
+                } else {
+                    // Complete all phases
+                    phases.forEach(phase => {
+                        const phaseElement = document.getElementById(`phase-${phase}`);
+                        phaseElement.classList.remove('active');
+                        phaseElement.classList.add('completed');
+                        phaseElement.querySelector('.phase-status').textContent = 'Completed';
+                        phaseElement.querySelector('.phase-status').className = 'phase-status status-completed';
+                    });
+                    
+                    addLogEntry('🎉 Project completed successfully!', 'success');
+                    clearInterval(progressInterval);
+                    
+                    // Refresh projects list
+                    setTimeout(() => {
+                        loadProjects();
+                        updateStats();
+                    }, 2000);
+                }
+            }, 2000);
+        }
+        
+        function addLogEntry(message, type = 'info') {
+            const log = document.getElementById('liveLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/projects');
+                const projects = await response.json();
+                
+                const projectsGrid = document.getElementById('projectsGrid');
+                
+                if (projects.length === 0) {
+                    projectsGrid.innerHTML = '<div style="text-align: center; opacity: 0.7; padding: 40px;">No active projects yet. Create your first project!</div>';
+                    return;
+                }
+                
+                projectsGrid.innerHTML = projects.map(project => `
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-name">${project.project_name}</div>
+                            <div class="project-status status-${project.status}">${project.status}</div>
+                        </div>
+                        <div class="project-info">
+                            <div style="margin-bottom: 10px;">
+                                <strong>Phase:</strong> ${project.current_phase}
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Iteration:</strong> ${project.iteration}
+                            </div>
+                            ${project.url ? `<div><strong>URL:</strong> <a href="${project.url}" target="_blank" class="project-url">${project.url}</a></div>` : ''}
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn primary" onclick="openProject('${project.project_name}')">Open</button>
+                            <button class="action-btn secondary" onclick="testProject('${project.project_name}')">Test</button>
+                            <button class="action-btn secondary" onclick="stopProject('${project.project_name}')">Stop</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+        
+        async function updateStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const stats = await response.json();
+                
+                document.getElementById('totalProjects').textContent = stats.total_projects || 0;
+                document.getElementById('activeProjects').textContent = stats.active_projects || 0;
+                document.getElementById('deployedProjects').textContent = stats.deployed_projects || 0;
+                document.getElementById('successRate').textContent = stats.success_rate || '100%';
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+        
+        async function openProject(projectName) {
+            try {
+                const response = await fetch(`/api/projects/${projectName}`);
+                const project = await response.json();
+                
+                if (project.data.url) {
+                    window.open(project.data.url, '_blank');
+                } else {
+                    alert('Project is not deployed yet');
+                }
+            } catch (error) {
+                alert('Error opening project: ' + error.message);
+            }
+        }
+        
+        async function testProject(projectName) {
+            try {
+                const response = await fetch(`/api/projects/${projectName}/test`, { method: 'POST' });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    addLogEntry(`Tests completed for ${projectName}`, 'success');
+                } else {
+                    addLogEntry(`Test failed for ${projectName}: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                addLogEntry(`Error testing ${projectName}: ${error.message}`, 'error');
+            }
+        }
+        
+        async function stopProject(projectName) {
+            try {
+                const response = await fetch(`/api/projects/${projectName}/stop`, { method: 'POST' });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    addLogEntry(`Project ${projectName} stopped`, 'success');
+                    loadProjects();
+                } else {
+                    addLogEntry(`Error stopping ${projectName}: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                addLogEntry(`Error stopping ${projectName}: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

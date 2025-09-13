@@ -12,6 +12,7 @@ import asyncio
 import logging
 
 from ..agents.coordinator_agent import CoordinatorAgent
+from ..agents.enhanced_coordinator_agent import EnhancedCoordinatorAgent
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -29,8 +30,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize coordinator
+# Initialize coordinators
 coordinator = CoordinatorAgent()
+enhanced_coordinator = EnhancedCoordinatorAgent()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -49,7 +51,13 @@ class APIResponse(BaseModel):
 # Routes
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    """Serve the main UI."""
+    """Serve the advanced UI."""
+    with open("src/api/templates/advanced_ui.html", "r") as f:
+        return HTMLResponse(f.read())
+
+@app.get("/ui", response_class=HTMLResponse)
+async def legacy_ui(request: Request):
+    """Serve the legacy UI."""
     return """
     <!DOCTYPE html>
     <html lang="en">
@@ -415,6 +423,70 @@ async def cleanup_all():
         )
     except Exception as e:
         logger.exception("Failed to cleanup projects")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Enhanced API endpoints
+class AdvancedProjectRequest(BaseModel):
+    command: str
+    project_name: str
+    project_type: str = "web-app"
+    tech_stack: str = "react-node"
+
+@app.post("/api/start-advanced-development", response_model=APIResponse)
+async def start_advanced_development(request: AdvancedProjectRequest):
+    """Start an advanced development cycle with GitHub integration."""
+    try:
+        result = await enhanced_coordinator.start_advanced_development(
+            request.command,
+            request.project_name,
+            request.project_type,
+            request.tech_stack
+        )
+        return APIResponse(
+            status=result["status"],
+            message=result.get("message", "Advanced development cycle completed"),
+            data=result
+        )
+    except Exception as e:
+        logger.exception("Failed to start advanced development cycle")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/projects-advanced", response_model=List[Dict[str, Any]])
+async def list_advanced_projects():
+    """List all advanced projects."""
+    try:
+        projects = await enhanced_coordinator.get_all_projects()
+        return projects
+    except Exception as e:
+        logger.exception("Failed to list advanced projects")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/projects-advanced/{project_name}", response_model=APIResponse)
+async def get_advanced_project_status(project_name: str):
+    """Get status of a specific advanced project."""
+    try:
+        status = await enhanced_coordinator.get_project_status(project_name)
+        return APIResponse(
+            status=status["status"],
+            message=status.get("message", "Project status retrieved"),
+            data=status.get("data")
+        )
+    except Exception as e:
+        logger.exception(f"Failed to get advanced project status for {project_name}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/stats", response_model=APIResponse)
+async def get_system_stats():
+    """Get system statistics."""
+    try:
+        stats = await enhanced_coordinator.get_system_stats()
+        return APIResponse(
+            status="success",
+            message="System statistics retrieved",
+            data=stats
+        )
+    except Exception as e:
+        logger.exception("Failed to get system statistics")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
