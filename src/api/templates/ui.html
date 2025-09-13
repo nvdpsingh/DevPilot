@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Co-Pilot UI</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧠 AI Co-Pilot Thinking Model</h1>
+      <p>Watch the AI agents think, plan, and build your project step-by-step</p>
+    </header>
+
+    <section class="command-section">
+      <textarea id="commandInput" placeholder="e.g., Build a FastAPI endpoint that returns /hello with name param"></textarea>                                                              
+      <div class="controls">
+        <input id="projectName" placeholder="Project name (optional)" />
+        <button id="runBtn">🚀 Start AI Thinking</button>
+      </div>
+    </section>
+
+    <section id="workflow" class="workflow-container">
+      <div class="workflow-header">
+        <h2>🤖 AI Agent Workflow</h2>
+        <div class="status-indicator" id="statusIndicator">Ready</div>
+      </div>
+      
+      <div class="workflow-steps">
+        <div class="step" id="step-planning">
+          <div class="step-header">
+            <span class="step-icon">🧠</span>
+            <span class="step-title">Planning & Analysis</span>
+            <span class="step-status" id="planning-status">⏳</span>
+          </div>
+          <div class="step-content" id="planning-content">Waiting for command...</div>
+        </div>
+
+        <div class="step" id="step-architecture">
+          <div class="step-header">
+            <span class="step-icon">🏗️</span>
+            <span class="step-title">Architecture Design</span>
+            <span class="step-status" id="architecture-status">⏳</span>
+          </div>
+          <div class="step-content" id="architecture-content">Waiting for planning...</div>
+        </div>
+
+        <div class="step" id="step-coding">
+          <div class="step-header">
+            <span class="step-icon">💻</span>
+            <span class="step-title">Code Generation</span>
+            <span class="step-status" id="coding-status">⏳</span>
+          </div>
+          <div class="step-content" id="coding-content">Waiting for architecture...</div>
+        </div>
+
+        <div class="step" id="step-testing">
+          <div class="step-header">
+            <span class="step-icon">🧪</span>
+            <span class="step-title">Testing & Quality</span>
+            <span class="step-status" id="testing-status">⏳</span>
+          </div>
+          <div class="step-content" id="testing-content">Waiting for code...</div>
+        </div>
+
+        <div class="step" id="step-deployment">
+          <div class="step-header">
+            <span class="step-icon">🚀</span>
+            <span class="step-title">Deployment & Results</span>
+            <span class="step-status" id="deployment-status">⏳</span>
+          </div>
+          <div class="step-content" id="deployment-content">Waiting for testing...</div>
+        </div>
+      </div>
+
+      <div class="final-results" id="finalResults" style="display: none;">
+        <h3>🎉 Final Results</h3>
+        <pre id="finalOutput"></pre>
+      </div>
+    </section>
+  </div>
+  <script src="/static/ui.js"></script>
+</body>
+</html>
+
+
